@@ -10,16 +10,19 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent
+{
   private accountService = inject(AccountService);
   private toastr = inject(ToastrService);
 
- cancelRegister = output<boolean>();
+  cancelRegister = output<boolean>();
   model: any = {}
 
-  Register(){
-    this.accountService.Register(this.model).subscribe({
-      next: response => {
+  Register()
+  {
+    this.accountService.register(this.model).subscribe({
+      next: response =>
+      {
         console.log(response);
         this.Cancel();
       },
@@ -27,7 +30,8 @@ export class RegisterComponent {
     })
   }
 
-  Cancel() {
+  Cancel()
+  {
     this.cancelRegister.emit(false);
   }
 }

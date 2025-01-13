@@ -13,16 +13,19 @@ import { TitleCasePipe } from '@angular/common';
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
-export class NavComponent {
+export class NavComponent
+{
   accountService = inject(AccountService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
   model: any = {};
 
-  Login() {
-    this.accountService.Login(this.model).subscribe({
-      next: _ => {
+  Login()
+  {
+    this.accountService.login(this.model).subscribe({
+      next: _ =>
+      {
         this.router.navigateByUrl('/members')
       },
       error: error => this.toastr.error(error.error)
@@ -30,8 +33,9 @@ export class NavComponent {
     })
   }
 
-  Logout() {
-    this.accountService.Logout();
+  Logout()
+  {
+    this.accountService.logout();
     this.router.navigateByUrl('/')
   }
 }
