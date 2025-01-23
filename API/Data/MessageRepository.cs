@@ -34,7 +34,7 @@ public class MessageRepository(DataContext context, IMapper mapper) : IMessageRe
 
         query = messageParams.Container switch
         {
-            "Inboxe" => query.Where(x => x.Recipient.UserName == messageParams.Username),
+            "Inbox" => query.Where(x => x.Recipient.UserName == messageParams.Username),
             "Outbox" => query.Where(x => x.Sender.UserName == messageParams.Username),
             _ => query.Where(x => x.Recipient.UserName == messageParams.Username && x.DateRead == null)
         };
@@ -58,7 +58,7 @@ public class MessageRepository(DataContext context, IMapper mapper) : IMessageRe
 
         if (unreadMessages.Count != 0)
         {
-            unreadMessages.ForEach(x => x.DateRead = DateTime.Now);
+            unreadMessages.ForEach(x => x.DateRead = DateTime.UtcNow);
             await context.SaveChangesAsync();
         }
 
