@@ -6,7 +6,7 @@ export interface Message
   senderPhotoUrl: string
   recipientId: number
   recipientUsername: string
-  recipientPhotoUrl: any
+  recipientPhotoUrl: string
   content: string
   dateRead?: Date
   messageSent: Date
