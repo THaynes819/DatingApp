@@ -28,11 +28,16 @@ public class UsersController(IUnitOfWork unitOfWork, IMapper mapper, IPhotoServi
     [HttpGet("{username}")]  // /api/users/"id"
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
-        var user = await unitOfWork.UserRepository.GetMemberAsync(username);
+        
+        var currentUsername = User.GetUsername();
 
-        if (user == null) return NotFound();
+        if (currentUsername == null) return BadRequest("currentUsername not found");
 
-        return user;
+#pragma warning disable CS8604 // Possible null reference argument.
+        return await unitOfWork.UserRepository.GetMemberAsync(username, isCurrentUser: currentUsername == username);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+
     }
 
     [HttpPut]
@@ -65,10 +70,6 @@ public class UsersController(IUnitOfWork unitOfWork, IMapper mapper, IPhotoServi
             PublicId = result.PublicId
         };
 
-        if (user.Photos.Count == 0)
-        {
-            photo.IsMain = true;
-        }
 
         user.Photos.Add(photo);
 
@@ -105,7 +106,8 @@ public class UsersController(IUnitOfWork unitOfWork, IMapper mapper, IPhotoServi
 
         if (user == null) return BadRequest("User not found");
 
-        var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+        // var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+        var photo = await unitOfWork.PhotoRepository.GetPhotoById(photoId);
 
         if (photo == null || photo.IsMain) return BadRequest("This photo cannot be deleted");
 
